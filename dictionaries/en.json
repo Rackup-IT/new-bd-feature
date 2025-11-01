@@ -1,0 +1,43 @@
+{
+  "Main-Top-Bar": {
+    "edition": "Edition",
+    "global": "Global",
+    "newsletter": "Newsletter",
+    "became-an-auhtor": "Become an author",
+    "sign-up-as-reader": "Sign up as reader",
+    "sign-in": "Sign in",
+    "bangladesh": "Bangladesh"
+  },
+  "search-section": {
+    "academic-rigour...": "Academic rigour, journalistic flair",
+    "search-analaysis...": "Search analaysis, research, academics"
+  },
+  "sign-up": {
+    "Join The BD-Feature": "Join The BD-Feature",
+    "Already have an account?": "Already have an account?",
+    "We welcome debate...": "We welcome debate and dissent, but personal attacks (on authors, other users, or any individual), abuse, and defamatory language will not be tolerated. We will also not tolerate attempts to disrupt discussion. We want to keep BD-Feature a welcoming space where intelligent discussion can thrive. Please be courteous.",
+    "Read our community standards": "Read our community standards",
+    "X (formerly Twitter)": "X (formerly Twitter)",
+    "Facebook": "Facebook",
+    "LinkedIn": "LinkedIn",
+    "Google": "Google",
+    "Email": "Email",
+    "We will show your email domain name on the site.": "We will show your email domain name on the site.",
+    "If you sign in with your email...": "If you sign in with your email account, we will display your email domain in comments to enhance your authority and credibility with other readers. So if you are a Prime Minister, don't forget to use your aph.gov.au email address.",
+    "Password": "Password",
+    " Please enter eight characters or more.": " Please enter eight characters or more.",
+    "Full name": "Full name",
+    "Your real name, please.": "Your real name, please.",
+    "Why?": "Why?",
+    "On The BD-Feature, user accounts must be...": "On The BD-Feature, user accounts must be...",
+    "Job title": "Job title",
+    "By checking this box, I agree to The Conversation's": "By checking this box, I agree to The Conversation's",
+    "Terms and Conditions": "Terms and Conditions",
+    "and": "and",
+    "Privacy Policy": "Privacy Policy",
+    "Agree & sign up": "Agree & sign up",
+    "Sign In to The BD-Feature": "Sign In to The BD-Feature",
+    "Don't have an account?": "Don't have an account?",
+    "Sign-In": "Sign-In"
+  }
+}
