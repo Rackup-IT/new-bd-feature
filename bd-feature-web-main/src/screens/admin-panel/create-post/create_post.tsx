@@ -9,6 +9,8 @@ import clsx from "clsx";
 import ErrorSnackbar from "../../../components/error-snackbar/error_snackbar";
 import useHttpRequest from "../../../hooks/api/useApiRequest";
 import AdminModel from "../../../interfaces/admin";
+import { useAppDispatch, useAppSelector } from "../../../store/hooks";
+import { setCloseIsEditPost } from "../../../store/slices/admin";
 import AddInNavigation from "../add-in-navigation/add_in_navigation";
 import ImageInput from "../image-input/image_input";
 import ArticleWritingEditor from "../rich-text-editor/rich_text_editor";
@@ -16,17 +18,20 @@ import SelectEdition from "../select-edition/select_edition";
 import TagList from "../tag-list-comp/tag_list_comp";
 import CustomTextFiled from "../text-field/text_field";
 
-interface CreatePostProps {}
+interface CreatePostProps {
+  author: AdminModel;
+}
 
-const CreatePost: React.FC<CreatePostProps> = (prpos) => {
+const CreatePost: React.FC<CreatePostProps> = (props) => {
   const { sendRequest, data, loading } = useHttpRequest();
   const {
     sendRequest: sendCreatePostRequest,
     error: postError,
     loading: postLoading,
   } = useHttpRequest();
-  const { sendRequest: getAuthorRequest, data: authorData } =
-    useHttpRequest<AdminModel>();
+  const isEditPost = useAppSelector((state) => state.admin.isEditPost);
+  const existingPost = useAppSelector((state) => state.admin.post);
+  const dispatch = useAppDispatch();
 
   const [reloadNavigation, setReloadNavigation] = useState<boolean>(false);
   const [image, setImage] = useState<string | null>(null);
@@ -49,21 +54,36 @@ const CreatePost: React.FC<CreatePostProps> = (prpos) => {
     formData.append("title", title!);
     formData.append("thumbnail", thumbnail!);
     formData.append("thumbnailAltText", thumbnailAltText!);
-    formData.append("publisherId", authorData?._id!);
-    formData.append("publisherName", authorData?.name!);
+    formData.append("publisherId", props.author._id);
+    formData.append("publisherName", props.author.name);
     formData.append("tags", JSON.stringify(tags!));
     formData.append("edition", edition === "Global" ? "gl" : "bd");
     formData.append("onNavigation", navigation!);
     formData.append("article", article);
 
     try {
-      await sendCreatePostRequest("/api/admin/post", {
-        method: "POST",
-        body: formData,
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("adminToken")}`,
-        },
-      });
+      if (!isEditPost) {
+        await sendCreatePostRequest("/api/admin/post", {
+          method: "POST",
+          body: formData,
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("adminToken")}`,
+          },
+        });
+      } else {
+        await sendCreatePostRequest(
+          `/api/admin/post?postId=${existingPost!._id}`,
+          {
+            method: "PUT",
+            body: formData,
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("adminToken")}`,
+            },
+          }
+        );
+
+        dispatch(setCloseIsEditPost());
+      }
       setShowToast(true);
       setTitle("");
       setThumbnail(null);
@@ -104,19 +124,26 @@ const CreatePost: React.FC<CreatePostProps> = (prpos) => {
   }, [title, thumbnail, tags]);
 
   useEffect(() => {
-    const adminToken = localStorage.getItem("adminToken");
-    if (!adminToken) {
-      return;
+    if (isEditPost) {
+      setTitle(existingPost?.title!);
+      setImage(existingPost?.thumbnail!);
+      setThumbnail(existingPost?.thumbnail!);
+      setThumbnailAltText(existingPost?.thumbnailAltText!);
+      setTags(existingPost?.tags!);
+      setEdition(existingPost?.edition === "gl" ? "Global" : "Bangladesh");
+      setArticle(existingPost?.article!);
+      setNavigation(existingPost?.onNavigation!);
     }
-
-    const getAuthor = async () => {
-      await getAuthorRequest(`/api/admin/author?token=${adminToken}`, {
-        method: "GET",
-      });
-    };
-
-    getAuthor();
-  }, [getAuthorRequest]);
+  }, [
+    isEditPost,
+    existingPost?.title,
+    existingPost?.thumbnailAltText,
+    existingPost?.thumbnail,
+    existingPost?.tags,
+    existingPost?.onNavigation,
+    existingPost?.edition,
+    existingPost?.article,
+  ]);
 
   return (
     <>
@@ -151,7 +178,7 @@ const CreatePost: React.FC<CreatePostProps> = (prpos) => {
           {postLoading ? (
             <LoadingSpinner className="w-5 h-5 fill-blue-800 dark:fill-blue-300" />
           ) : (
-            <p className="sm:text-lg">Publish</p>
+            <p className="sm:text-lg">{isEditPost ? "Update" : "Publish"}</p>
           )}
         </button>
       </nav>
@@ -188,7 +215,7 @@ const CreatePost: React.FC<CreatePostProps> = (prpos) => {
             label="Publisher Name"
             placeholder="Loading..."
             className="mt-4 opacity-50"
-            value={authorData?.name || ""}
+            value={props.author.name || ""}
             readOnly={true}
           />
           <TagList setTags={setTags} tags={tags} />
@@ -209,7 +236,7 @@ const CreatePost: React.FC<CreatePostProps> = (prpos) => {
           <ArticleWritingEditor
             onChange={(e) => setArticle(e)}
             value={article!}
-            className="mt-2"
+            className="mt-2 h-[85vh]"
           />
         </div>
       </main>
