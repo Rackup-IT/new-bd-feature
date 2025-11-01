@@ -1,0 +1,47 @@
+@import "tailwindcss";
+@plugin 'tailwind-scrollbar';
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Custom scrollbar for sidebar - hidden but functional */
+.sidebar-scroll {
+  overflow-y: auto;
+  scrollbar-width: none;
+  /* Firefox */
+  -ms-overflow-style: none;
+  /* IE and Edge */
+}
+
+.sidebar-scroll::-webkit-scrollbar {
+  display: none;
+  /* Chrome, Safari, Opera */
+}
+
+/* Show thin scrollbar on hover */
+.sidebar-scroll:hover {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(156, 163, 175, 0.5) transparent;
+}
+
+.sidebar-scroll:hover::-webkit-scrollbar {
+  display: block;
+  width: 4px;
+}
+
+.sidebar-scroll:hover::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.sidebar-scroll:hover::-webkit-scrollbar-thumb {
+  background: rgba(156, 163, 175, 0.5);
+  border-radius: 2px;
+}
+
+.sidebar-scroll:hover::-webkit-scrollbar-thumb:hover {
+  background: rgba(107, 114, 128, 0.7);
+}
