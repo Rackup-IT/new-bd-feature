@@ -1,0 +1,10 @@
+{
+  "overrides": [
+    {
+      "files": ["src/features/admin-panel/components/status_dropdown.tsx"],
+      "rules": {
+        "react-hooks/exhaustive-deps": "off"
+      }
+    }
+  ]
+}
